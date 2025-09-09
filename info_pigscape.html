@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="icon" href="/static/favicon-16x16.png"/> 
+  <title>돼탈출 🐷 | 소개</title>
+
+  <!-- ✅ 폰트 -->
+  <style>
+    @font-face {
+      font-family: 'Paperlogy';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-2@1.0/Paperlogy-4Regular.woff2') format('woff2');
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Paperlogy';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-2@1.0/Paperlogy-7ExtraBold.woff2') format('woff2');
+      font-weight: 700; font-style: normal;
+    }
+    :root{
+      --nav:#d94a4a;         /* 상단 glb */
+      --brand-border:#f08080;
+      --red-weak:#f8d7d7;    /* 타이틀 박스 배경 */
+      --red-soft:#ffcccc;    /* 팁 카드 앞면 */
+      --red-back:#ffeaea;    /* 팁 카드 뒷면 */
+      --text:#222; --muted:#555;
+      --gap: 48px;           /* 카드 간격(좌우 여백과 동일하게 사용) */
+      --nav-h: 72px;         /* glb 높이 */
+    }
+    *{box-sizing:border-box}
+
+    .glb{
+      position:fixed; top:0; left:0; width:100%;
+      height:var(--nav-h);
+      background:var(--nav);
+      display:flex; align-items:center; gap:24px;
+      padding:0 20px; z-index:1000;
+      box-shadow:0 4px 10px rgba(0,0,0,.08);
+    }
+
+    html,body{
+      margin:0; padding:0;
+      font-family:'Paperlogy',sans-serif;
+      color:var(--text); background:#fff;
+      overflow-x:hidden;
+    }
+    *{box-sizing:border-box}
+    a{color:inherit;text-decoration:none}
+
+    /* 상단 GLB */
+    .glb{
+      position:fixed; top:0; left:0; width:100%;
+      height:var(--nav-h);
+      background:var(--nav);
+      display:flex; align-items:center; gap:24px;
+      padding:0 20px; z-index:1000;
+      box-shadow:0 4px 10px rgba(0,0,0,.08);
+    }
+    /* 브랜드(좌측 "돼탈출 🐷" 박스) */
+    .brand{
+      display:flex; align-items:center; justify-content:center;
+      height:56px; padding:0 18px;
+      border:3px solid var(--brand-border);
+      background:var(--red-weak);
+      border-radius:14px;
+      font-weight:700; font-size:22px;
+      color:#000;                 /* 요구: 글자 검은색 */
+      user-select:none; cursor:pointer;
+      transition:transform .18s ease;
+    }
+    .brand .pig{ display:inline-block; margin-left:6px; transition:transform .12s ease; }
+    .brand.pulse{ transform:scale(1.06); }
+
+    /* 내비 링크 */
+    .nav-links{ display:flex; align-items:center; gap:22px; margin-left:auto; }
+    .nav-item{
+      position:relative; color:#fff; font-weight:700; font-size:18px;
+      padding:8px 6px; border-radius:8px; cursor:pointer;
+      transition:transform .2s ease, opacity .2s ease;
+    }
+    .nav-item .mini{
+      position:absolute; left:50%; top:100%;
+      transform:translate(-50%, 8px);
+      background:#fff; color:#333; white-space:nowrap;
+      padding:8px 10px; border-radius:10px;
+      box-shadow:0 6px 18px rgba(0,0,0,.15);
+      font-size:13px; font-weight:400;
+      opacity:0; pointer-events:none;
+      transition:opacity .15s ease, transform .15s ease;
+    }
+    /* ✅ “아이템 위에서만” 애니메이션: 다른 아이템 흐림(0.3) & 현재 아이템 클로즈업 */
+    .nav-links.dim .nav-item{ opacity:.3; transform:none; }
+    .nav-links.dim .nav-item.active{ opacity:1; transform:scale(1.18); }
+    .nav-links.dim .nav-item.active .mini{ opacity:1; transform:translate(-50%, 12px); }
+
+    /* 섹션 */
+    .section {
+      height:100vh;
+      display:flex; flex-direction:column;
+      justify-content:center; align-items:center;
+      padding-top:72px;
+    }
+
+    /* Pg.1 */
+    .pg1 h1{ font-size:40px; font-weight:700; margin-bottom:10px;}
+    .pg1 h2{ font-size:22px; font-weight:400; }
+    .arrow-down{
+      margin-top:40px;
+      width:24px; height:24px;
+      border-left:3px solid #333;
+      border-bottom:3px solid #333;
+      transform:rotate(-45deg);
+      animation:arrowBlink 1.5s infinite;
+    }
+    @keyframes arrowBlink {
+      0%,100%{transform:translateY(0) rotate(-45deg);}
+      50%{transform:translateY(10px) rotate(-45deg);}
+    }
+
+    /* Pg.2 */
+    .pg2{flex-direction:row; justify-content:space-around;}
+    .pg2 .logo img{max-width:300px;}
+    .pg2 .texts{display:flex; flex-direction:column; gap:30px;}
+    .pg2 .texts h3{font-size:28px; font-weight:700;}
+    .pg2 .texts p{font-size:18px; font-weight:400; color:var(--muted);}
+
+    /* Pg.3 */
+    .pg3{flex-direction:row; justify-content:space-around;}
+    .pg3 .left{display:flex; flex-direction:column; gap:16px; max-width:50%;}
+    .pg3 .left h2{font-size:32px; font-weight:700;}
+    .pg3 .left h3{font-size:22px; font-weight:700;}
+    .pg3 .left p{font-size:16px; font-weight:400; color:var(--muted);}
+    .pg3 .right{font-size:80px;}
+
+    /* Pg.4 */
+    .pg4{flex-direction:row; justify-content:space-around; align-items:center; position:relative;}
+    .pg4 .col{font-size:32px; font-weight:700;}
+    .pg4::before{
+      content:""; position:absolute; top:15%; bottom:15%; left:50%;
+      width:2px; background:#aaa;
+    }
+
+    /* Pg.5 */
+    .pg5{flex-direction:row; justify-content:space-around; align-items:flex-start; padding-top:100px;}
+    .team-list, .mento-list{ display:flex; flex-direction:column; gap:14px; }
+    .team-list .name, .mento-list .name {
+      font-size:20px; cursor:pointer; transition:.2s;
+    }
+    .team-list .name:hover{ transform:translateX(10px); }
+    .mento-list .name:hover{ transform:translateX(-10px); }
+    .fade-dim{opacity:.3;}
+    .desc{ font-size:16px; margin-top:4px; display:none; }
+    .desc.active{ display:block; }
+
+    /* 색상 매핑 */
+    .role-purple{color:#9a6eff;}  /* 기술부 */
+    .role-brown{color:#c49c6b;}   /* 기타 */
+    .role-blue{color:#5aa7ff;}    /* 디자인 */
+    .role-deeppurple{color:#b372ff;} /* 기술&제작 */
+    .role-red{color:#ff6b6b;}     /* 지식&조사 */
+    .role-green{color:#5edc83;}   /* 총괄&운영 */
+    .role-gray{color:#555;}       /* 기록 */
+    .role-yellow{color:#d9b93e;}  /* 운영부 */
+
+    /* Pg.6 */
+    .pg6 h1{font-size:26px; font-weight:700; margin-bottom:10px;}
+    .pg6 h2{font-size:20px; font-weight:700;}
+  </style>
+</head>
+<body>
+
+  <!-- 상단 GLB -->
+  <nav class="glb" role="navigation" aria-label="주요 메뉴">
+    <!-- 브랜드: 클릭 시 홈, 🐷 클릭 시 순차 확대 후 0.2초 뒤 원복 -->
+    <div class="brand" id="brandBox" onclick="location.href='/'" title="홈으로">
+      <span>돼탈출</span>
+      <span class="pig" id="navPig">🐷</span>
+    </div>
+
+    <div class="nav-links" id="navLinks">
+      <a class="nav-item" href="/info">
+        돼탈출?
+        <span class="mini">돼탈출 프로그램이란?</span>
+      </a>
+      <a class="nav-item" href="/bmr">
+        BMR 계산기
+        <span class="mini">사용자 BMR와 분포도 안내</span>
+      </a>
+      <a class="nav-item" href="/game">
+        돼지니어스
+        <span class="mini">게임으로 배우는 다이어트 상식</span>
+      </a>
+      <a class="nav-item" href="/mypage">
+        내 페이지
+        <span class="mini">맞춤형 개인 페이지</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- 섹션들 -->
+  <div id="sections">
+    <!-- Pg.1 -->
+    <section class="section pg1">
+      <h1>비만과 스트레스, 그 이상</h1>
+      <h2>돼탈출이 해소해드립니다.</h2>
+      <div class="arrow-down"></div>
+    </section>
+
+    <!-- Pg.2 -->
+    <section class="section pg2">
+      <div class="logo"><img src="/static/logo_main_pigscape.png" alt="돼탈출 로고"/></div>
+      <div class="texts">
+        <div>
+          <h3>계속적인.</h3>
+          <p>돼탈출은 사용자분들이 꾸준한 목표로 꾸준히 운동하도록 돕습니다.</p>
+        </div>
+        <div>
+          <h3>체계적인.</h3>
+          <p>체계적인 프로그램으로 사용자분들의 다이어트 효용성을 높입니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pg.3 -->
+    <section class="section pg3">
+      <div class="left">
+        <h2>주요 기능</h2>
+        <div>
+          <h3>① 돼탈출?</h3>
+          <p>돼탈출 프로그램의 전반적인 이해도를 높여드립니다.</p>
+        </div>
+        <div>
+          <h3>② BMI 계산기</h3>
+          <p>BMI 계산 및 사용자분들의 평균 연령대의 BMI와 분포도를 알려드립니다.</p>
+        </div>
+        <div>
+          <h3>③ 돼지니어스</h3>
+          <p>간단한 게임으로 다이어트와 관련된 여러 상식들을 알 수 있습니다.</p>
+        </div>
+        <div>
+          <h3>④ 내 페이지</h3>
+          <p>사용자분들의 개개인 데이터들을 기록합니다.</p>
+        </div>
+      </div>
+      <div class="right">⚡</div>
+    </section>
+
+    <!-- Pg.4 -->
+    <section class="section pg4">
+      <div class="col">Team. 뒷동네</div>
+      <div class="col">Mento.</div>
+    </section>
+
+    <!-- Pg.5 -->
+    <section class="section pg5">
+      <div class="team-list">
+        <div class="name" data-role="김영광"><span>김영광</span><div class="desc"> <span class="role-purple">기술부</span> / <span class="role-blue">디자인</span></div></div>
+        <div class="name" data-role="박준형"><span>박준형</span><div class="desc"><span class="role-purple">기술부</span> / <span class="role-brown">기타</span></div></div>
+        <div class="name" data-role="유이준"><span>유이준</span><div class="desc"><span class="role-deeppurple">기술부</span> / <span class="role-deeppurple">기술 & 제작</span></div></div>
+        <div class="name" data-role="이권우"><span>이권우</span><div class="desc"><span class="role-yellow">운영부</span> / <span class="role-red">지식 & 조사</span></div></div>
+        <div class="name" data-role="이승헌"><span>이승헌</span><div class="desc"><span class="role-yellow">운영부</span> / <span class="role-green">총괄 & 운영</span></div></div>
+        <div class="name" data-role="황태민"><span>황태민</span><div class="desc"><span class="role-yellow">운영부</span> / <span class="role-gray">기록</span></div></div>
+      </div>
+      <div class="mento-list">
+        <div class="name" data-role="임건"><span>임건</span><div class="desc">서울대학교 화학생명공학과</div></div>
+      </div>
+    </section>
+
+    <!-- Pg.6 -->
+    <section class="section pg6">
+      <h1>ⓒ 2025 stx4R.</h1>
+      <h2>All rights reserved.</h2>
+    </section>
+  </div>
+
+  <script>
+
+    /* ---------- GLB: 항목 위에서만 다른 항목 흐리기(0.3) + 소주제 노출 ---------- */
+    const navLinks = document.getElementById('navLinks');
+    const navItems = [...navLinks.querySelectorAll('.nav-item')];
+
+    navItems.forEach(item=>{
+      item.addEventListener('mouseenter', ()=>{
+        navLinks.classList.add('dim');
+        navItems.forEach(i=>i.classList.remove('active'));
+        item.classList.add('active');
+      });
+      item.addEventListener('mouseleave', ()=>{
+        setTimeout(()=>{
+          if(!navItems.some(i=>i.matches(':hover'))){
+            navLinks.classList.remove('dim');
+            navItems.forEach(i=>i.classList.remove('active'));
+          }
+        }, 20);
+      });
+    });
+
+    /* ---------- 브랜드 🐷: 이모지 → 박스 순차 확대 후 0.2초 뒤 원복 ---------- */
+    const brandBox = document.getElementById('brandBox');
+    const navPig   = document.getElementById('navPig');
+    navPig.addEventListener('click', (e)=>{
+      e.stopPropagation(); // 브랜드 클릭 이동 방지
+      navPig.style.transform = 'scale(2)';
+      setTimeout(()=> brandBox.classList.add('pulse'), 80);
+      setTimeout(()=>{
+        navPig.style.transform = 'scale(1)';
+        brandBox.classList.remove('pulse');
+      }, 200); // 0.2초 뒤 복귀
+    });
+  </script>
+</body>
+</html>
