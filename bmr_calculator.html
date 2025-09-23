@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  
   <meta charset="UTF-8">
   <title>돼탈출 🐷 | BMR 계산기</title>
   <style>
@@ -137,6 +138,40 @@
     .btn-solid{background:#d94a4a;color:#fff;border:2px solid #d94a4a;}
     .btn-solid:hover{background:#a93232;}
   </style>
+  <script>
+// 🚫 1. Disable right-click & text selection (copy/paste prevention)
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("copy", e => e.preventDefault());
+document.addEventListener("cut", e => e.preventDefault());
+document.addEventListener("paste", e => e.preventDefault());
+
+// 🚫 2. Disable DevTools shortcuts
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" || // F12
+    (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || // Ctrl+Shift+I/J
+    (e.ctrlKey && e.key.toLowerCase() === "u") // Ctrl+U
+  ) {
+    e.preventDefault();
+    alert("🚫 Developer Mode is disabled!");
+  }
+});
+
+// 🚨 3. Detect if DevTools is open (basic check)
+(function() {
+  const threshold = 160;
+  setInterval(() => {
+    if (
+      window.outerWidth - window.innerWidth > threshold ||
+      window.outerHeight - window.innerHeight > threshold
+    ) {
+      document.body.innerHTML = "<h1 style='text-align:center; color:red;'>🚨 Developer Tools Detected! 🚨</h1>";
+    }
+  }, 500);
+})();
+</script>
+
 </head>
 <body>
   <!-- 상단 GLB -->
