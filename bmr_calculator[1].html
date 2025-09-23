@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>돼탈출 🐷 | BMR 계산기</title>
+  <style>
+    @font-face {
+      font-family: 'Paperlogy3';
+      src: url('static/fonts/Paperlogy-3Light.ttf') format('truetype');
+      font-weight: 300; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Paperlogy4';
+      src: url('static/fonts/Paperlogy-4Regular.ttf') format('truetype');
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Paperlogy5';
+      src: url('static/fonts/Paperlogy-5Medium.ttf') format('truetype');
+      font-weight: 500; font-style: normal;
+    }
+
+    html,body{
+      margin:0; padding:0;
+      font-family:'Paperlogy5', 'Paperlogy4', 'Paperlogy3', sans-serif;
+      color:var(--text); background:#fff;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    
+    :root{
+      --nav:#d94a4a;         /* 상단 glb */
+      --brand-border:#f08080;
+      --red-weak:#f8d7d7;    /* 타이틀 박스 배경 */
+      --red-soft:#ffcccc;    /* 팁 카드 앞면 */
+      --red-back:#ffeaea;    /* 팁 카드 뒷면 */
+      --text:#222; --muted:#555;
+      --gap: 48px;           /* 카드 간격(좌우 여백과 동일하게 사용) */
+      --nav-h: 72px;         /* glb 높이 */
+    }
+    *{box-sizing:border-box}
+    /* 상단 GLB */
+    .glb{
+      position:fixed; top:0; left:0; width:100%;
+      height:var(--nav-h);
+      background:var(--nav);
+      display:flex; align-items:center; gap:24px;
+      padding:0 20px; z-index:1000;
+      box-shadow:0 4px 10px rgba(0,0,0,.08);
+    }
+    /* 브랜드(좌측 "돼탈출 🐷" 박스) */
+    .brand{
+      display:flex; align-items:center; justify-content:center;
+      height:56px; padding:0 18px;
+      border:3px solid var(--brand-border);
+      background:var(--red-weak);
+      border-radius:14px;
+      font-weight:700; font-size:22px;
+      color:#000;                 /* 요구: 글자 검은색 */
+      user-select:none; cursor:pointer;
+      transition:transform .18s ease;
+    }
+    .brand .pig{ display:inline-block; margin-left:6px; transition:transform .12s ease; }
+    .brand.pulse{ transform:scale(1.06); }
+
+    /* 내비 링크 */
+    .nav-links{ display:flex; align-items:center; gap:22px; margin-left:auto; }
+    .nav-item{
+      position:relative; color:#fff; font-weight:700; font-size:18px;
+      padding:8px 6px; border-radius:8px; cursor:pointer;
+      transition:transform .2s ease, opacity .2s ease;
+    }
+    .nav-item .mini{
+      position:absolute; left:50%; top:100%;
+      transform:translate(-50%, 8px);
+      background:#fff; color:#333; white-space:nowrap;
+      padding:8px 10px; border-radius:10px;
+      box-shadow:0 6px 18px rgba(0,0,0,.15);
+      font-size:13px; font-weight:400;
+      opacity:0; pointer-events:none;
+      transition:opacity .15s ease, transform .15s ease;
+    }
+    /* ✅ “아이템 위에서만” 애니메이션: 다른 아이템 흐림(0.3) & 현재 아이템 클로즈업 */
+    .nav-links.dim .nav-item{ opacity:.3; transform:none; }
+    .nav-links.dim .nav-item.active{ opacity:1; transform:scale(1.18); }
+    .nav-links.dim .nav-item.active .mini{ opacity:1; transform:translate(-50%, 12px); }
+
+    /* 팝업 */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);
+      display:flex;justify-content:center;align-items:center;z-index:900;}
+    .popup{background:rgba(255,255,255,0.95);padding:25px;border-radius:15px;
+      box-shadow:0 25px 50px rgba(0,0,0,0.6);width:360px;}
+    .popup h2{text-align:center;margin-bottom:20px;}
+    .gender-options{display:flex;justify-content:space-between;gap:12px;margin-top:10px;}
+    .gender-option{flex:1;padding:10px;border:2px solid black;border-radius:20px;
+      cursor:pointer;text-align:center;}
+    .gender-option.dimmed{opacity:.3;}
+    input[type=number]{width:100%;padding:10px;margin-top:8px;border:1px solid #aaa;border-radius:5px;}
+    .submit-btn{margin-top:20px;display:block;margin-left:auto;border:2px solid black;
+      background:transparent;padding:8px 15px;border-radius:6px;cursor:pointer;}
+
+    /* 결과 */
+    .result{margin-top:100px;max-width:900px;margin-left:auto;margin-right:auto;display:none;}
+    .bar-wrapper{margin:30px auto;position:relative;width:400px;height:40px;
+      border:3px solid black;border-radius:30px;overflow:hidden;}
+    .bar-layer{position:absolute;width:100%;height:100%;top:0;left:0;
+      display:flex;flex-direction:row;}
+    .bar-section{flex:1;}
+    .yellow{background:#fff9c4;}
+    .green{background:#c8e6c9;}
+    .red{background:#ffcdd2;}
+    .bar-labels{display:flex;justify-content:space-between;margin:5px auto 20px;width:400px;font-size:14px;}
+    .arrow {
+    position:absolute;
+    bottom:100%; /* 막대 위 */
+    transform:translateX(-50%);
+    font-weight:bold;
+    white-space:nowrap;
+    transition:left 1s ease;
+  }
+    #avg-arrow{color:gray;font-size:13px;}
+    @keyframes floatArrow{0%{transform:translateY(0);}50%{transform:translateY(-6px);}100%{transform:translateY(0);}}
+    .arrow.float{animation:floatArrow 1.8s ease-in-out infinite;}
+
+    /* 카드 */
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px;}
+    .card{padding:20px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.1);}
+    .status{background:#fff9c4;border:2px solid #fbc02d;}
+    .recommend{background:#c8e6c9;border:2px solid #388e3c;}
+    .funfacts{margin-top:30px;padding:20px;background:#ffe0b2;border:2px solid #ffa726;border-radius:16px;}
+    .funfacts .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center;}
+    .fact{background:#fff;border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+    .actions{margin-top:30px;display:flex;gap:12px;justify-content:center;}
+    .btn{padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:bold;}
+    .btn-outline{border:2px solid #d94a4a;color:#d94a4a;background:transparent;}
+    .btn-outline:hover{background:#d94a4a;color:#fff;}
+    .btn-solid{background:#d94a4a;color:#fff;border:2px solid #d94a4a;}
+    .btn-solid:hover{background:#a93232;}
+  </style>
+</head>
+<body>
+  <!-- 상단 GLB -->
+  <nav class="glb" role="navigation" aria-label="주요 메뉴">
+    <!-- 브랜드: 클릭 시 홈, 🐷 클릭 시 순차 확대 후 0.2초 뒤 원복 -->
+    <div class="brand" id="brandBox" onclick="location.href='/'" title="홈으로">
+      <span>돼탈출</span>
+      <span class="pig" id="navPig">🐷</span>
+    </div>
+
+    <div class="nav-links" id="navLinks">
+      <a class="nav-item" href="info_pigscape.html">
+        돼탈출?
+        <span class="mini">돼탈출 프로그램이란?</span>
+      </a>
+      <a class="nav-item" href="bmr_calculator.html">
+        BMR 계산기
+        <span class="mini">사용자 BMR와 분포도 안내</span>
+      </a>
+      <a class="nav-item" href="game_pigscape.html">
+        돼지니어스
+        <span class="mini">게임으로 배우는 다이어트 상식</span>
+      </a>
+      <a class="nav-item" href="info_user.html">
+        내 페이지
+        <span class="mini">맞춤형 개인 페이지</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- 팝업 -->
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <h2>BMR 데이터 조사</h2>
+      <label>성별을 선택해주세요.</label>
+      <div class="gender-options">
+        <div class="gender-option" id="male" onclick="selectGender('male')">남성 ♂️</div>
+        <div class="gender-option" id="female" onclick="selectGender('female')">여성 ♀️</div>
+      </div>
+      <label>나이를 기입해주세요.</label>
+      <input type="number" id="age">
+      <label>키를 기입해주세요. (cm)</label>
+      <input type="number" id="height">
+      <label>체중을 기입해주세요. (kg)</label>
+      <input type="number" id="weight">
+      <button class="submit-btn" onclick="calculateBMR()">계산하기 🧮</button>
+    </div>
+  </div>
+
+  <!-- 결과 -->
+  <div class="result" id="result">
+    <h2 id="bmr-title"></h2>
+    <div class="bar-wrapper">
+      <div class="bar-layer">
+        <div class="bar-section yellow"></div>
+        <div class="bar-section green"></div>
+        <div class="bar-section red"></div>
+      </div>
+      <div class="arrow" id="arrow">⬆</div>
+      <div class="arrow" id="avg-arrow">⬆ 평균 BMR 수치</div>
+    </div>
+    <div class="bar-labels" id="bar-labels"></div>
+    <p id="analysis"></p>
+    <p id="average"></p>
+    <p id="recommend"></p>
+
+    <!-- 분석 & 권장사항 -->
+    <div class="cards">
+      <div class="card status">
+        <h3>📊 분석 결과</h3>
+        <p id="status-text"></p>
+      </div>
+      <div class="card recommend">
+        <h3>💡 맞춤 권장사항</h3>
+        <p id="recommend-cal"></p>
+      </div>
+    </div>
+
+    <!-- 재미있는 사실 -->
+    <div class="funfacts">
+      <h3>🎯 재미있는 사실</h3>
+      <div class="grid">
+        <div class="fact"><div id="fact-hour"></div><div>시간당 소모</div></div>
+        <div class="fact"><div id="fact-year"></div><div>연간 소모</div></div>
+        <div class="fact"><div id="fact-week"></div><div>주간 지방 소모(kg)</div></div>
+      </div>
+    </div>
+
+    <!-- 액션 버튼 -->
+    <div class="actions">
+      <button class="btn btn-outline" onclick="resetCalculator()">다시 계산하기 🔄</button>
+      <button class="btn btn-solid" onclick="showVideoPopup()">맞춤 운동 계획 보기 🏋️‍♀️</button>
+    </div>
+  </div>
+
+    <!-- 운동 영상 팝업 -->
+    <div class="overlay" id="videoOverlay" style="display:none;">
+      <div class="popup" style="padding:0; width:auto; max-width:800px; position:relative;">
+        <button id="closeVideo" style="
+          position:absolute; top:10px; right:14px;
+          border:none; background:transparent;
+          font-size:20px; cursor:pointer;">✖</button>
+        <video id="exerciseVideo" controls autoplay style="width:100%; height:auto; border-radius:12px;"></video>
+      </div>
+    </div>
+
+  
+<script>
+
+    const navLinks = document.getElementById('navLinks');
+    const navItems = [...navLinks.querySelectorAll('.nav-item')];
+
+    navItems.forEach(item=>{
+      item.addEventListener('mouseenter', ()=>{
+        navLinks.classList.add('dim');
+        navItems.forEach(i=>i.classList.remove('active'));
+        item.addEventListener('mouseleave', ()=>{}); // no-op to prevent duplicate
+        item.classList.add('active');
+      });
+      item.addEventListener('mouseleave', ()=>{
+        setTimeout(()=>{
+          if(!navItems.some(i=>i.matches(':hover'))){
+            navLinks.classList.remove('dim');
+            navItems.forEach(i=>i.classList.remove('active'));
+          }
+        }, 20);
+      });
+    });
+
+  let selectedGender=null;
+  function selectGender(g){selectedGender=g;
+    document.getElementById("male").classList.remove("dimmed");
+    document.getElementById("female").classList.remove("dimmed");
+    if(g==="male")document.getElementById("female").classList.add("dimmed");
+    else document.getElementById("male").classList.add("dimmed");
+  }
+  function getAverageBMR(g,a){
+    if(g==="male"){if(a<25)return 1720;if(a<30)return 1680;if(a<35)return 1650;
+      if(a<40)return 1620;if(a<45)return 1600;if(a<50)return 1580;if(a<55)return 1550;
+      if(a<60)return 1530;return 1500;}
+    else{if(a<25)return 1470;if(a<30)return 1430;if(a<35)return 1400;if(a<40)return 1370;
+      if(a<45)return 1350;if(a<50)return 1330;if(a<55)return 1300;if(a<60)return 1270;return 1250;}
+  }
+  function calculateBMR(){
+    const age=parseInt(document.getElementById("age").value);
+    const h=parseFloat(document.getElementById("height").value);
+    const w=parseFloat(document.getElementById("weight").value);
+    if(!selectedGender||!age||!h||!w){alert("모든 값을 입력해주세요!");return;}
+    let bmr=0;
+    if(selectedGender==="male"){ bmr=88.362+(13.397*w)+(4.799*h)-(5.677*age);}
+    else{ bmr=447.593+(9.247*w)+(3.098*h)-(4.330*age);}
+    showResult(Math.round(bmr),selectedGender,age);
+  }
+  function showResult(bmr,g,a){
+    document.getElementById("overlay").style.display="none";
+    document.getElementById("result").style.display="block";
+    document.getElementById("bmr-title").textContent="나의 BMR은 "+bmr+"입니다.";
+    const arrow=document.getElementById("arrow");
+    const avgArrow=document.getElementById("avg-arrow");
+    const labels=document.getElementById("bar-labels");
+    let low,high;
+    if(g==="male"){low=1400;high=2400;
+      labels.innerHTML="<div>1400</div><div>1800</div><div>2400</div>";
+    } else {low=1100;high=1900;
+      labels.innerHTML="<div>1100</div><div>1500</div><div>1900</div>";
+    }
+    let text,color="black";
+    if(g==="male"){
+      if(bmr<1600){text="평균보다 낮습니다.";color="#fbc02d";}
+      else if(bmr<1900){text="평균입니다.";color="#388e3c";}
+      else{text="평균보다 높습니다.";color="#d32f2f";}
+    } else {
+      if(bmr<1300){text="평균보다 낮습니다.";color="#fbc02d";}
+      else if(bmr<1700){text="평균입니다.";color="#388e3c";}
+      else{text="평균보다 높습니다.";color="#d32f2f";}
+    }
+    const pos=v=>v<=low?0:v>=high?400:((v-low)/(high-low))*400;
+    const avgBMR=getAverageBMR(g,a);
+    arrow.style.left=pos(bmr)+"px";arrow.style.color=color;arrow.textContent="⬆ "+bmr;
+    avgArrow.style.left=pos(avgBMR)+"px";avgArrow.textContent="⬆ 평균 "+avgBMR;
+    arrow.classList.add("float");avgArrow.classList.add("float");
+    document.getElementById("analysis").textContent="내 bmr 지수 "+bmr+"는 "+text;
+    document.getElementById("average").textContent="동나이대 평균 bmr "+avgBMR+"입니다.";
+    document.getElementById("recommend").textContent=bmr+"에 맞는 추천 운동법 확인하기!";
+    document.getElementById("status-text").textContent=text;
+    document.getElementById("recommend-cal").textContent=
+      "일일 권장 "+Math.round(bmr*1.4)+"~"+Math.round(bmr*1.7)+" kcal, "+
+      "감량 "+Math.round(bmr*1.2)+" kcal, 증량 "+Math.round(bmr*1.8)+" kcal";
+    document.getElementById("fact-hour").textContent=Math.round(bmr/24);
+    document.getElementById("fact-year").textContent=Math.round((bmr*365)/1000)+"k";
+    document.getElementById("fact-week").textContent=(Math.round(((bmr*7)/7700)*10)/10);
+  }
+  function resetCalculator(){
+    document.getElementById("overlay").style.display="flex";
+    document.getElementById("result").style.display="none";
+    document.getElementById("age").value="";
+    document.getElementById("height").value="";
+    document.getElementById("weight").value="";
+    selectedGender=null;
+  }
+
+    // 운동 영상 리스트
+  const videos = [
+    "static/videos/IMG_0494.MOV",
+    "static/videos/IMG_0495.MOV",
+    "static/videos/IMG_0497.MOV",
+    "static/videos/IMG_0498.MOV",
+    "static/videos/IMG_0503.MOV",
+    "static/videos/IMG_2924.MOV",
+    "static/videos/IMG_2926.MOV",
+    "static/videos/IMG_2927.MOV",
+    "static/videos/IMG_2928.MOV",
+  ];
+
+  // 팝업 열기
+  function showVideoPopup(){
+    const videoOverlay=document.getElementById("videoOverlay");
+    const exerciseVideo=document.getElementById("exerciseVideo");
+    const rand=videos[Math.floor(Math.random()*videos.length)];
+    exerciseVideo.src=rand;
+    videoOverlay.style.display="flex";
+  }
+
+  // 팝업 닫기
+  document.getElementById("closeVideo").addEventListener("click",()=>{
+    document.getElementById("videoOverlay").style.display="none";
+    document.getElementById("exerciseVideo").pause();
+  });
+
+</script>
+</body>
+</html>

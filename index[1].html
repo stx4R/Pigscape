@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="static/favicon-16x16.png"/> 
+  <title>돼탈출 🐷 | 홈</title>
+
+  <!-- ✅ Paperlogy 폰트 -->
+  <style>
+    @font-face {
+      font-family: 'Paperlogy3';
+      src: url('static/fonts/Paperlogy-3Light.ttf') format('truetype');
+      font-weight: 300; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Paperlogy4';
+      src: url('static/fonts/Paperlogy-4Regular.ttf') format('truetype');
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: 'Paperlogy5';
+      src: url('static/fonts/Paperlogy-5Medium.ttf') format('truetype');
+      font-weight: 500; font-style: normal;
+    }
+
+    :root{
+      --nav:#d94a4a;         
+      --brand-border:#f08080;
+      --red-weak:#f8d7d7;    
+      --red-soft:#ffcccc;    
+      --red-back:#ffeaea;    
+      --text:#222; --muted:#555;
+      --gap: 48px;           
+      --nav-h: 72px;         
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0; padding:0;
+      font-family:'Paperlogy5', 'Paperlogy4', 'Paperlogy3', sans-serif;
+      color:var(--text); background:#fff;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+  </style>
+
+  <!-- ✅ 공통 스타일 + 프리미엄 UI -->
+  <style>
+    /* 상단 GLB */
+    .glb{
+      position:fixed; top:0; left:0; width:100%;
+      height:var(--nav-h);
+      background:var(--nav);
+      display:flex; align-items:center; gap:24px;
+      padding:0 20px; z-index:1000;
+      box-shadow:0 4px 10px rgba(0,0,0,.08);
+    }
+    .brand{
+      display:flex; align-items:center; justify-content:center;
+      height:56px; padding:0 18px;
+      border:3px solid var(--brand-border);
+      background:var(--red-weak);
+      border-radius:14px;
+      font-weight:700; font-size:22px;
+      color:#000;
+      user-select:none; cursor:pointer;
+      transition:transform .18s ease;
+    }
+    .brand .pig{ display:inline-block; margin-left:6px; transition:transform .12s ease; }
+    .brand.pulse{ transform:scale(1.06); }
+
+    /* ✅ 프리미엄 왕관 */
+    .crown {
+      font-size: 26px;
+      margin-left: 6px;
+      cursor: pointer;
+      color: gold;
+      background: transparent;
+      line-height: 1;
+      transition: transform .2s;
+    }
+    .crown:hover{ transform:scale(1.1); }
+
+    /* 내비 링크 */
+    .nav-links{ display:flex; align-items:center; gap:22px; margin-left:auto; }
+    .nav-item{
+      position:relative; color:#fff; font-weight:700; font-size:18px;
+      padding:8px 6px; border-radius:8px; cursor:pointer;
+      transition:transform .2s ease, opacity .2s ease;
+    }
+    .nav-item .mini{
+      position:absolute; left:50%; top:100%;
+      transform:translate(-50%, 8px);
+      background:#fff; color:#333; white-space:nowrap;
+      padding:8px 10px; border-radius:10px;
+      box-shadow:0 6px 18px rgba(0,0,0,.15);
+      font-size:13px; font-weight:400;
+      opacity:0; pointer-events:none;
+      transition:opacity .15s ease, transform .15s ease;
+    }
+    .nav-links.dim .nav-item{ opacity:.3; transform:none; }
+    .nav-links.dim .nav-item.active{ opacity:1; transform:scale(1.18); }
+    .nav-links.dim .nav-item.active .mini{ opacity:1; transform:translate(-50%, 12px); }
+
+    /* 히어로 */
+    .fold{
+      margin-top: var(--nav-h);
+      height: calc(100vh - var(--nav-h));
+      display: grid;
+      grid-template-rows: 0.46fr 0.54fr;
+      row-gap: 8px;
+      overflow: hidden;
+    }
+    .hero{ display:flex; flex-direction:column;
+      align-items:center; justify-content:flex-end;
+      padding: 0 16px 12px;
+      text-align:center; min-height:0;
+    }
+    .hero-title{
+      display:inline-flex; align-items:center; justify-content:center;
+      background:var(--red-weak);
+      border:3px solid var(--brand-border);
+      border-radius:15px;
+      padding:16px 28px;
+      font-size:44px; font-weight:700; color:#c33;
+      user-select:none; cursor:default;
+      transition:transform .18s ease, background .18s ease;
+      will-change:transform;
+    }
+    .hero-title:hover{ background:#f5c3c3; }
+    .hero-title.pulse{ transform:scale(1.08); }
+    .char{ display:inline-block; margin:0 2px; cursor:pointer;
+      transition: transform .18s ease, color .18s ease; }
+    .char:hover{ transform:translateY(-4px) rotate(-3deg); color:#b11; }
+    .char.pop{ transform:scale(1.24) rotate(2deg); }
+    .hero-pig{ display:inline-block; margin-left:8px; transition:transform .12s ease; }
+    .hero-pig.boom{ transform:scale(2); }
+    .hero-sub{ margin-top:10px; font-size:18px; color:var(--muted); line-height:1.6; }
+
+    /* 팁 카드 */
+    .tips{ min-height:0; padding: 0 var(--gap); margin-top: -6px; }
+    .tips-row{ height:100%; display:flex; gap:var(--gap);
+      align-items:center; justify-content:center; }
+    .tip-card{ flex: 0 0 30%; min-width: 220px;
+      height: 260px; perspective:1200px; position:relative; }
+    .tip-inner{ width:100%; height:100%; position:relative;
+      transform-style: preserve-3d;
+      transition: transform .7s cubic-bezier(.22,.61,.36,1);
+      transform-origin: center; }
+    .tip-card:hover .tip-inner,
+    .tip-card.flipped .tip-inner{ transform: rotateY(-180deg); }
+    .tip-face{ position:absolute; inset:0; border-radius:16px;
+      backface-visibility:hidden;
+      display:flex; align-items:center; justify-content:center;
+      text-align:center; padding:16px;
+      box-shadow:0 6px 14px rgba(0,0,0,.12); }
+    .tip-front{ background:var(--red-soft); color:#333;
+      font-weight:700; line-height:1.35;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .tip-back{ background:var(--red-back); color:#222;
+      transform: rotateY(180deg);
+      font-size:16px; line-height:1.6; }
+    .tip-front .tip-title, .tip-front .tip-range{
+      transition: transform .2s ease, opacity .2s ease; }
+    .tip-card:hover .tip-front .tip-title{ transform: translateY(-2px); }
+    .tip-card:hover .tip-front .tip-range{ transform: translateY(-1px); }
+
+    .container{ max-width:1200px; margin:0 auto; }
+
+    /* ✅ 프리미엄 모달 */
+    .premium-overlay {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.6);
+      display: none; align-items:center; justify-content:center;
+      z-index: 2000;
+    }
+    .premium-modal {
+      background: #fff; border-radius: 14px;
+      padding: 24px; width: 380px; text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .premium-modal h2 { margin:0 0 16px; }
+    .premium-modal ul { text-align:left; margin:16px 0; padding:0; list-style:none; }
+    .premium-modal ul li { margin:8px 0; }
+    .premium-btn {
+      background: gold; border:none;
+      padding:10px 20px; border-radius:8px;
+      font-weight:700; cursor:pointer;
+      transition: .2s;
+    }
+    .premium-btn:hover{ background:#e6c200 }
+    .close-btn {
+      margin-top:12px;
+      background:transparent; border:1px solid #333;
+      padding:8px 16px; border-radius:8px;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .close-btn:hover{ background:#f2f2f2 }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 GLB -->
+  <nav class="glb" role="navigation" aria-label="주요 메뉴">
+    <div class="brand" id="brandBox" onclick="location.href='/'" title="홈으로">
+      <span>돼탈출</span>
+      <span class="pig" id="navPig">🐷</span>
+    </div>
+
+    <!-- ✅ 프리미엄 왕관 버튼 -->
+    <div class="crown" id="crownBtn" title="프리미엄">👑</div>
+
+    <div class="nav-links" id="navLinks">
+      <a class="nav-item" href="info_pigscape.html">돼탈출?<span class="mini">돼탈출 프로그램이란?</span></a>
+      <a class="nav-item" href="bmr_calculator.html">BMR 계산기<span class="mini">사용자 BMR와 분포도 안내</span></a>
+      <a class="nav-item" href="game_pigscape.html">돼지니어스<span class="mini">게임으로 배우는 다이어트 상식</span></a>
+      <a class="nav-item" href="info_user.html">내 페이지<span class="mini">맞춤형 개인 페이지</span></a>
+    </div>
+  </nav>
+
+  <!-- ✅ 프리미엄 모달 -->
+  <div class="premium-overlay" id="premiumOverlay">
+    <div class="premium-modal">
+      <h2>돼탈출 프리미엄 👑</h2>
+      <p>더 많은 기능과 맞춤형 경험을 즐겨보세요!</p>
+      <ul>
+        <li>🚫 광고 제거</li>
+        <li>📊 AI 맞춤형 식단 & 운동 플랜</li>
+        <li>🗂 BMI/BMR 기록 저장</li>
+        <li>💡 전문가 팁 제공</li>
+        <li>🏆 매월 다이어트 챌린지 참여</li>
+      </ul>
+      <!-- 보고서 기반 요금제 안내 -->
+      <p><b>요금제</b><br>
+        1개월 ₩5,900 / 3개월 ₩15,900</p>
+      <button class="premium-btn" onclick="location.href='/premium'">프리미엄 상세보기</button>
+      <button class="close-btn" onclick="closePremium()">닫기</button>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <main class="fold">
+    <!-- 히어로 -->
+    <section class="hero container" aria-labelledby="hero-title">
+      <div class="hero-title" id="heroTitle" aria-live="polite">
+        <span id="titleText">돼탈출</span>
+        <span class="hero-pig" id="heroPig">🐷</span>
+      </div>
+      <p class="hero-sub">
+        지방이 너무 많아 힘들어하는 분들을 위해<br/>
+        돼탈출이 탈출 기회를 마련해드립니다.
+      </p>
+    </section>
+
+    <!-- 팁 3장 -->
+    <section class="tips container" aria-label="다이어트 팁">
+      <div class="tips-row">
+        <!-- 1 -->
+        <div class="tip-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="tip-inner">
+            <div class="tip-face tip-front">
+              <div class="tip-title">과체중</div>
+              <div class="tip-range">(BMI 23 ~ 25)</div>
+            </div>
+            <div class="tip-face tip-back">
+              <div><strong>가볍게, 꾸준히!</strong><br/>하루 7–10k 보행, 군것질 빈도 줄이기,<br/>물 충분히 마시기부터 시작해요.</div>
+            </div>
+          </div>
+        </div>
+        <!-- 2 -->
+        <div class="tip-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="tip-inner">
+            <div class="tip-face tip-front">
+              <div class="tip-title">비만</div>
+              <div class="tip-range">(BMI 25 ~ 30)</div>
+            </div>
+            <div class="tip-face tip-back">
+              <div><strong>리듬 만들기</strong><br/>주 3–4회 유산소 + 2회 근력,<br/>단백질·채소 위주 규칙 식사!</div>
+            </div>
+          </div>
+        </div>
+        <!-- 3 -->
+        <div class="tip-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="tip-inner">
+            <div class="tip-face tip-front">
+              <div class="tip-title">고도비만</div>
+              <div class="tip-range">(BMI 30 ~ 35)</div>
+            </div>
+            <div class="tip-face tip-back">
+              <div><strong>안전 최우선</strong><br/>전문가 상담과 저강도부터 점진적 증가,<br/>수면·스트레스 관리 병행!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // GLB 인터랙션
+    const navLinks=document.getElementById('navLinks');
+    const navItems=[...navLinks.querySelectorAll('.nav-item')];
+    navItems.forEach(item=>{
+      item.addEventListener('mouseenter', ()=>{
+        navLinks.classList.add('dim');
+        navItems.forEach(i=>i.classList.remove('active'));
+        item.classList.add('active');
+      });
+      item.addEventListener('mouseleave', ()=>{
+        setTimeout(()=>{
+          if(!navItems.some(i=>i.matches(':hover'))){
+            navLinks.classList.remove('dim');
+            navItems.forEach(i=>i.classList.remove('active'));
+          }
+        },20);
+      });
+    });
+
+    const brandBox=document.getElementById('brandBox');
+    const navPig=document.getElementById('navPig');
+    navPig.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      navPig.style.transform='scale(2)';
+      setTimeout(()=>brandBox.classList.add('pulse'),80);
+      setTimeout(()=>{
+        navPig.style.transform='scale(1)';
+        brandBox.classList.remove('pulse');
+      },200);
+    });
+
+    const titleText=document.getElementById('titleText');
+    const heroTitle=document.getElementById('heroTitle');
+    const heroPig=document.getElementById('heroPig');
+    const original=titleText.textContent.trim();
+    titleText.textContent='';
+    [...original].forEach(ch=>{
+      const s=document.createElement('span');
+      s.className='char';
+      s.textContent=ch;
+      s.addEventListener('click', ()=>{
+        s.classList.add('pop');
+        setTimeout(()=> s.classList.remove('pop'),220);
+      });
+      titleText.appendChild(s);
+    });
+    heroPig.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      heroPig.classList.add('boom');
+      setTimeout(()=> heroTitle.classList.add('pulse'),80);
+      setTimeout(()=>{
+        heroPig.classList.remove('boom');
+        heroTitle.classList.remove('pulse');
+      },200);
+    });
+
+    document.querySelectorAll('.tip-card').forEach(card=>{
+      const toggle = ()=>{
+        card.classList.toggle('flipped');
+        card.setAttribute('aria-pressed', card.classList.contains('flipped'));
+      };
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault(); toggle();
+        }
+      });
+    });
+
+    // ✅ 프리미엄 모달
+    const crownBtn=document.getElementById("crownBtn");
+    const premiumOverlay=document.getElementById("premiumOverlay");
+    crownBtn.addEventListener("click", ()=> {
+      premiumOverlay.style.display="flex";
+    });
+    function closePremium(){
+      premiumOverlay.style.display="none";
+    }
+  </script>
+</body>
+</html>

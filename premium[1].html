@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>돼탈출 🐷 | 프리미엄</title>
+  <style>
+    @font-face {
+    font-family: 'Paperlogy3';
+    src: url('static/fonts/Paperlogy-3Light.ttf') format('truetype');
+    font-weight: 300; font-style: normal;
+    }
+    @font-face {
+    font-family: 'Paperlogy4';
+    src: url('static/fonts/Paperlogy-4Regular.ttf') format('truetype');
+    font-weight: 400; font-style: normal;
+    }
+    @font-face {
+    font-family: 'Paperlogy5';
+    src: url('static/fonts/Paperlogy-5Medium.ttf') format('truetype');
+    font-weight: 500; font-style: normal;
+    }
+
+    :root{
+      --nav:#d94a4a;         
+      --brand-border:#f08080;
+      --red-weak:#f8d7d7;    
+      --red-soft:#ffcccc;    
+      --red-back:#ffeaea;    
+      --text:#222; --muted:#555;
+      --gap: 48px;           
+      --nav-h: 72px;         
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0; padding:0;
+      font-family:'Paperlogy5', 'Paperlogy4', 'Paperlogy3', sans-serif;
+      color:var(--text); background:#fff;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    .glb{position:fixed;top:0;left:0;width:100%;height:var(--nav-h);
+      background:var(--nav);display:flex;align-items:center;gap:24px;
+      padding:0 20px;z-index:1000;box-shadow:0 4px 10px rgba(0,0,0,.08);}
+    .brand{display:flex;align-items:center;justify-content:center;
+      height:56px;padding:0 18px;border:3px solid var(--brand-border);
+      background:var(--red-weak);border-radius:14px;font-weight:700;
+      font-size:22px;color:#000;cursor:pointer}
+    .brand .pig{margin-left:6px}
+    .nav-links{display:flex;align-items:center;gap:22px;margin-left:auto;}
+    .nav-item{color:#fff;font-weight:700;font-size:18px;cursor:pointer}
+    main{margin-top:var(--nav-h);padding:20px;max-width:900px;margin-left:auto;margin-right:auto}
+    h1{font-size:32px;margin-bottom:10px}
+    h2{font-size:24px;margin-top:30px;margin-bottom:10px}
+    .plan-box{border:2px solid #eee;border-radius:12px;padding:20px;margin:15px 0;transition:.2s}
+    .plan-box:hover{transform:scale(1.02);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+    .price{font-size:22px;font-weight:700;color:#d94a4a}
+    .btn{display:inline-block;margin-top:10px;padding:10px 16px;
+      background:#d94a4a;color:#fff;font-weight:700;border-radius:8px;
+      text-decoration:none;transition:.2s}
+    .btn:hover{background:#b83838}
+    .challenge{background:#fff9c4;padding:16px;border-radius:12px;margin-top:20px}
+  </style>
+</head>
+<body>
+  <!-- 상단 GLB -->
+  <nav class="glb">
+    <div class="brand" onclick="location.href='/'">돼탈출 <span class="pig">🐷</span></div>
+    <div class="nav-links">
+      <a class="nav-item" href="info_pigscape.html">돼탈출?</a>
+      <a class="nav-item" href="bmr_calculator.html">BMR 계산기</a>
+      <a class="nav-item" href="game_pigscape.html">돼지니어스</a>
+      <a class="nav-item" href="info_user.html">내 페이지</a>
+    </div>
+  </nav>
+
+  <main>
+    <h1>돼탈출 프리미엄 👑</h1>
+    <p>AI 맞춤형 식단과 운동, 그리고 <b>챌린지 보상 시스템</b>을 경험하세요.</p>
+
+    <h2>요금제</h2>
+    <div class="plan-box">
+      <h3>월간 구독</h3>
+      <p class="price">₩5,900 / 월</p>
+      <p>기본 프리미엄 기능 포함</p>
+      <a href="#" class="btn">구독하기</a>
+    </div>
+    <div class="plan-box">
+      <h3>3개월 패키지</h3>
+      <p class="price">₩15,900</p>
+      <p>추가 보너스 점수 제공</p>
+      <a href="#" class="btn">구독하기</a>
+    </div>
+    <div class="plan-box">
+      <h3>6개월 패키지</h3>
+      <p class="price">₩29,900</p>
+      <p>장기 구독 할인 + 보너스 점수</p>
+      <a href="#" class="btn">구독하기</a>
+    </div>
+
+    <h2>💡 프리미엄 다이어트 챌린지</h2>
+    <div class="challenge">
+      <p>모든 프리미엄 사용자의 구독료 일부(10%)가 상금으로 쌓입니다.</p>
+      <ul>
+        <li>🥇 1등: 상금 10만원</li>
+        <li>🥈 2등: 상금 5만원</li>
+        <li>🥉 3등: 상금 3만원</li>
+      </ul>
+      <p><b>포기하면 상금을 받을 기회도 잃습니다!</b></p>
+    </div>
+  </main>
+</body>
+</html>
